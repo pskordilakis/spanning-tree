@@ -5,11 +5,6 @@
  *     Author : P. Skordilakis
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <iso646.h>
-#include <malloc.h>
 #include "Queue.h"
 
 /*
@@ -18,7 +13,7 @@
  * to store vertices a graph
  */
 
-void enqueue( QUEUE *q, int node ) {
+void q_enqueue( QUEUE *q, int node ) {
 	QNODE *newNode = malloc(sizeof(QNODE));
 	newNode->data = node;
 
@@ -37,7 +32,7 @@ void enqueue( QUEUE *q, int node ) {
  * Dequeue a node, if the queue is empty
  * it returns null
  */
-QNODE *dequeue( QUEUE *q ) {
+QNODE *q_dequeue( QUEUE *q ) {
 	if ( q->head == NULL ) {
 		//puts("Queue is empty");
 	}
@@ -55,9 +50,9 @@ QNODE *dequeue( QUEUE *q ) {
 	return NULL;
 }
 
-void clearQueue(QUEUE *q) {
+void q_clear(QUEUE *q) {
 	QNODE *aux = q->tail;
-	while ( aux not_eq NULL ) {
+	while ( aux != NULL ) {
 		if ( aux->np == NULL ) {
 			free(aux);
 			break;
@@ -75,7 +70,7 @@ void clearQueue(QUEUE *q) {
  */
 void printQueue(QUEUE *q) {
 QNODE *aux = q->tail;
-while (aux not_eq NULL) {
+while (aux != NULL) {
 	printf("%d|", aux->data);
 	if ( aux->np == NULL ) {
 		puts("");

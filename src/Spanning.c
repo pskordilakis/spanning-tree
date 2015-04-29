@@ -10,9 +10,10 @@
 #include <stdbool.h>
 #include <iso646.h>
 #include <malloc.h>
-#include "Sparse.h"
-#include "Queue.h"
-#include "DoubleLinkedList.h"
+
+#include "sparse/Sparse.h"
+#include "queue/Queue.h"
+#include "double_linked_list/DoubleLinkedList.h"
 
 int root;
 
@@ -21,20 +22,20 @@ int root;
  * because the graph is undirected we insert
  * node1->node2 and node2->node1
  */
-void insertEdge( SPARSE *graph, int i, int j ) {
-	insertSparse(graph,i,j);
+void insert_edge( SPARSE *graph, int i, int j ) {
+	sparse_insert(graph,i,j);
 	if ( i != j ) {
-		insertSparse(graph,j,i);
+		sparse_insert(graph,j,i);
 	}
 }
 
 /*
  * Delete an edge from the graph
  */
-void deleteEdge( SPARSE *graph, int i, int j ) {
-	deleteSparse(graph, i, j);
+void delete_edge( SPARSE *graph, int i, int j ) {
+	sparse_delete(graph, i, j);
 	if ( i != j ) {
-		deleteSparse(graph, i, j);
+		sparse_delete(graph, i, j);
 	}
 }
 
@@ -42,37 +43,37 @@ void deleteEdge( SPARSE *graph, int i, int j ) {
  * Find all edges that connect a nodeA with
  * a nodeB and mark nodeA visited
  */
-void markVisited( SPARSE *graph, int node ) {
+void mark_visited( SPARSE *graph, int node ) {
 	NODE *aux=graph->rowHeads[node];
 	while ( aux not_eq NULL ) {
-		NODE *aux2 = searchSparse(graph,aux->hkey,aux->vkey);
+		NODE *aux2 = sparse_search(graph,aux->hkey,aux->vkey);
 		if ( aux->ci not_eq BLACK and aux->ci not_eq RED ){
 			aux->ci=RED;
 			aux2->cj=RED;
 		}
-		if ( not sparseHasNext(aux) ) {
+		if ( not sparse_has_next(aux) ) {
 			break;
 		}
-		sparseNext(&aux);
+		sparse_next(&aux);
 	}
 }
 
 /*
  * Mark the vertexA black, then check every edge that
- * coonects the vertexA with a vertexB,
+ * connects the vertexA with a vertexB,
  * if vertexB is marked visited then deactivate the edge,
- * else marke vertexB visited in every edge tha connect
+ * else mark vertexB visited in every edge that connect
  * vertexB with another node
  */
-void workWith( SPARSE *graph, QUEUE *visited, int vertex ) {
+void work_with( SPARSE *graph, QUEUE *visited, int vertex ) {
 	NODE *aux = graph->rowHeads[vertex];
 	while ( aux not_eq NULL ) {
-		NODE *aux2 = searchSparse(graph,aux->hkey,aux->vkey);
+		NODE *aux2 = sparse_search(graph,aux->hkey,aux->vkey);
 		aux->ci = BLACK;
 		aux2->cj = BLACK;
 		if (aux->cj not_eq BLACK and aux->cj not_eq RED){
-			markVisited(graph,aux->hkey);
-			enqueue(visited,aux->hkey );
+			mark_visited(graph,aux->hkey);
+			q_enqueue(visited,aux->hkey );
 			aux->p = vertex;
 			aux2->p = vertex;
 		}
@@ -81,10 +82,10 @@ void workWith( SPARSE *graph, QUEUE *visited, int vertex ) {
 			aux2->status=false;
 		}
 
-		if ( not sparseHasNext(aux) ) {
+		if ( not sparse_has_next(aux) ) {
 			break;
 		}
-		sparseNext(&aux);
+		sparse_next(&aux);
 	}
 }
 
@@ -94,18 +95,18 @@ void workWith( SPARSE *graph, QUEUE *visited, int vertex ) {
  */
 void bfs( SPARSE *graph , QUEUE *visited ) {
 	/*
-	 * The algorihm starts from the vertex that you
+	 * The algorithm starts from the vertex that you
 	 * want as root in the spanning tree
 	 */
 	puts( "Type Root" );
 	scanf( "%d", &root );
 	getchar();
-	enqueue( visited, root );//Enqueue root in the visited set
+	q_enqueue( visited, root );//Enqueue root in the visited set
 	while ( visited->head not_eq NULL ) {//while the visited set not empty
-		QNODE *node = dequeue( visited );//dequeue the first node
+		QNODE *node = q_dequeue( visited );//dequeue the first node
 		int workingNode = node->data;
 		free(node);
-		workWith(graph,visited,workingNode);
+		work_with(graph,visited,workingNode);
 	}
 }
 
@@ -118,17 +119,17 @@ void findParent( SPARSE *graph, DLL *dll, int vertex ) {
 	while ( edge not_eq NULL ) {
 		if( edge->status == true ) {
 			if ( vertex not_eq root ) {
-				insertDll( dll, edge->vkey, edge->hkey );
-				insertDll( dll, edge->hkey, edge->vkey );
+				dll_insert( dll, edge->vkey, edge->hkey );
+				dll_insert( dll, edge->hkey, edge->vkey );
 				findParent( graph, dll, edge->p );
 			}
 			break;
 		}
 
-		if ( not sparseHasNext(edge) ) {
+		if ( not sparse_has_next(edge) ) {
 			break;
 		}
-		sparseNext(&edge);
+		sparse_next(&edge);
 	}
 }
 
@@ -138,7 +139,7 @@ void findParent( SPARSE *graph, DLL *dll, int vertex ) {
  * and then we find the edges that form a circle
  * (Union(pathA, pathB)-Intesect(pathA, pathB))
  */
-void findCircles( SPARSE *graph, NODE *edge ) {
+void find_circles( SPARSE *graph, NODE *edge ) {
 	if ( edge->status not_eq false ) {
 		puts("The edge you chose does not create cycles");
 	}
@@ -147,19 +148,19 @@ void findCircles( SPARSE *graph, NODE *edge ) {
 		DLL *setB = malloc(sizeof(QUEUE));
 		findParent( graph, setA ,edge->vkey);
 		findParent( graph, setB, edge->hkey);
-		DLL *setU = dllUnion(setA, setB);
-		DLL *setI = dllIntersect(setA, setB);
-		DLL *setM = dllMinus(setU, setI);
-		clearDll(setU);free(setU);
-		clearDll(setI);free(setI);
+		DLL *setU = dll_union(setA, setB);
+		DLL *setI = dll_intersect(setA, setB);
+		DLL *setM = dll_minus(setU, setI);
+		dll_clear(setU);free(setU);
+		dll_clear(setI);free(setI);
 		printf("The circle has the following edges :\n%d->%d ",edge->vkey, edge->hkey);
-		printDllAll(setM);
-		clearDll(setM);free(setM);
+		dll_print(setM);
+		dll_clear(setM);free(setM);
 	}
 }
 
 /*
- * Prints all the edges of the graph wich are active,
+ * Prints all the edges of the graph which are active,
  * i.e. prints the spanning tree of the graph
  */
 void printTree( SPARSE *graph ) {
@@ -170,10 +171,10 @@ void printTree( SPARSE *graph ) {
 				if(aux->status == true ) {
 					printf("%d->%d\n",aux->vkey, aux->hkey );
 				}
-				if ( not sparseHasNext(aux) ) {
+				if ( not sparse_has_next(aux) ) {
 					break;
 				}
-				sparseNext(&aux);
+				sparse_next(&aux);
 			}
 			if ( aux not_eq NULL ) {
 				puts("");
@@ -182,10 +183,10 @@ void printTree( SPARSE *graph ) {
 }
 
 /*
- * Prints all the edges of the graph twich are deactivated
- * i.e. prints the edges tha form circles in the graph
+ * Prints all the edges of the graph which are deactivated
+ * i.e. prints the edges that form circles in the graph
  */
-void printDeactivatedEdges( SPARSE *graph ) {
+void print_deactivated_edges( SPARSE *graph ) {
 	int counter;
 	for ( counter = 0; counter<31; counter++ ) {
 		NODE *aux = graph->rowHeads[counter];
@@ -193,10 +194,10 @@ void printDeactivatedEdges( SPARSE *graph ) {
 			if(aux->status not_eq true ) {
 				printf("%d->%d\n",aux->vkey, aux->hkey );
 			}
-			if ( not sparseHasNext(aux) ) {
+			if ( not sparse_has_next(aux) ) {
 				break;
 			}
-			sparseNext(&aux);
+			sparse_next(&aux);
 		}
 		if ( aux not_eq NULL ) {
 			puts("");
@@ -215,7 +216,7 @@ void menuInsertEdges( SPARSE *graph ) {
 		scanf("%d-%d", &vertexi, &vertexj );
 		getchar();
 	}
-	insertEdge( graph, vertexi, vertexj );
+	insert_edge( graph, vertexi, vertexj );
 }
 
 /*
@@ -229,7 +230,7 @@ void menuDeleteEdges( SPARSE *graph ) {
 		scanf("%d-%d", &vertexi, &vertexj );
 		getchar();
 	}
-	deleteSparse( graph, vertexi, vertexj );
+	sparse_delete( graph, vertexi, vertexj );
 }
 
 /*
@@ -238,11 +239,11 @@ void menuDeleteEdges( SPARSE *graph ) {
 void menuCircles( SPARSE *graph ) {
 	int nodei, nodej;
 	puts("Choose an edge from below to find the circle in the graph(va-vb)");
-	printDeactivatedEdges( graph );
+	print_deactivated_edges( graph );
 	scanf("%d-%d", &nodei, &nodej );
 	getchar();
-	NODE *edge = searchSparse( graph, nodei, nodej );
-	findCircles( graph, edge );
+	NODE *edge = sparse_search( graph, nodei, nodej );
+	find_circles( graph, edge );
 }
 
 /*
@@ -256,7 +257,7 @@ void menuPrint( SPARSE *graph ) {
 		getchar();
 		switch( subchoice ) {
 		case 1 : {
-			printSparseAll( graph ); break;
+			sparse_print_all( graph ); break;
 		}
 		case 2 : {
 			printTree( graph ); break;
