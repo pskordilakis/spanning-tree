@@ -5,7 +5,7 @@
  *     Author : P. Skordilakis
  */
 
-#include "Queue.h"
+#include "../includes/queue.h"
 
 /*
  * Enqueue a node
@@ -64,7 +64,6 @@ void q_clear(QUEUE *q) {
 	q->tail = NULL;
 }
 
-/************************************************************************************/
 /*
  * Print the nodes in the queue
  */

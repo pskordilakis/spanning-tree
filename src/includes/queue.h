@@ -8,6 +8,10 @@
 #ifndef QUEUE_H_
 #define QUEUE_H_
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+    
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -30,8 +34,10 @@ typedef struct queue {
 void q_enqueue( QUEUE *q, int node );
 QNODE *q_dequeue( QUEUE *q );
 void q_clear(QUEUE *q);
-QUEUE *q_union( QUEUE *qA, QUEUE *qB );
-QUEUE *q_intersect( QUEUE *qA, QUEUE *qB);
 void q_print(QUEUE *q);
+
+#ifdef	__cplusplus
+}
+#endif
 
 #endif /* QUEUE_H_ */

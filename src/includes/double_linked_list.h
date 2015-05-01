@@ -8,6 +8,10 @@
 #ifndef DOUBLELINKEDLIST_H
 #define DOUBLELINKEDLIST_H
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+    
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -35,5 +39,9 @@ DLL *dll_intersect(DLL *setA, DLL *setB);
 DLL *dll_minus(DLL *setA, DLL *setB);
 void dll_clear(DLL *dll);
 void dll_print(DLL *dll);
+
+#ifdef	__cplusplus
+}
+#endif
 
 #endif /* DOUBLELINKEDLIST_H_ */

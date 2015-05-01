@@ -5,7 +5,7 @@
  *      Author: P. Skordilakis
  */
 
-#include "Sparse.h"
+#include "../includes/sparse.h"
 
 /*
  * Check if a list in the sparse array has nodes

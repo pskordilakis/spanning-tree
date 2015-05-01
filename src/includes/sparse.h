@@ -8,6 +8,10 @@
 #ifndef SPARSE_H_
 #define SPARSE_H_
 
+#ifdef	__cplusplus
+extern "C" {
+#endif
+    
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
@@ -54,5 +58,9 @@ int sparse_delete(SPARSE *s, int i, int j); //Delete a node from a specific plac
 void sparse_clear(); //Delete every node
 void sparse_print(SPARSE *s, int i, int j); //Print a specific node
 void sparse_print_all(SPARSE *s); //Print all the nodes
+
+#ifdef	__cplusplus
+}
+#endif
 
 #endif /* SPARSE_H_ */

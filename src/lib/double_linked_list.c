@@ -5,7 +5,7 @@
  *     Author : P. Skordilakis
  */
 
-#include "DoubleLinkedList.h"
+#include "../includes/double_linked_list.h"
 
 /*
  * Check if a list in the sparse array has nodes
