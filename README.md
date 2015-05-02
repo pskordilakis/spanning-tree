@@ -19,7 +19,7 @@ or vertices, together with a set of ordered pairs of these nodes
 (or, in some cases, a set of unordered pairs). These pairs are known as edges or
 arcs. As in mathematics, an edge (x,y) is said to point or go from x to y.
 
-![graph](http://en.wikipedia.org/wiki/File:6n-graf.svg)
+![graph](http://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/6n-graf.svg/333px-6n-graf.svg.png)
 
 DOUBLE LINKED LIST
 ------------------
@@ -30,7 +30,7 @@ sequence of nodes. The beginning and ending nodes' previous and next links,
 respectively, point to some kind of terminator, typically a sentinel node or 
 null, to facilitate traversal of the list.
 
-![double linked list](http://en.wikipedia.org/wiki/File:Doubly-linked-list.svg)
+![double linked list](http://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Doubly-linked-list.svg/610px-Doubly-linked-list.svg.png)
 
 QUEUE
 -----
@@ -40,4 +40,4 @@ operations on the collection are the addition of entities to the rear terminal
 position, known as enqueue, and removal of entities from the front terminal 
 position, known as dequeue.
 
-![queue](http://en.wikipedia.org/wiki/File:Data_Queue.svg)
+![queue](http://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Data_Queue.svg/405px-Data_Queue.svg.png)
